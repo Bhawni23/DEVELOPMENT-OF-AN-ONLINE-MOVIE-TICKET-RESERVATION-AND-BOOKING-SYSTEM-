@@ -1,0 +1,210 @@
+
+<!DOCTYPE html> 
+
+<html lang="en"> 
+
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>CineBook - Movie Ticket Booking
+    </title>
+     <style>
+    * {
+            box-sizing: border-box;
+        }
+
+         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f2f4f9;
+            color: #222;
+        }
+
+         header {
+            background: #2b4a9b;
+            color: white;
+            padding: 16px 20px;
+        }
+
+          header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+          header p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            opacity: .9;
+        }
+
+         main {
+            max-width: 760px;
+            margin: 18px auto;
+            padding: 0 14px 30px;
+        }
+
+         .card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+        }
+
+         h2 {
+            font-size: 17px;
+            margin: 0 0 12px;
+            color: #2b4a9b;
+        }
+
+         label {
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+         select,
+        input {
+            width: 100%;
+            padding: 9px;
+            font-size: 15px;
+            border: 1px solid #bbb;
+             border-radius: 5px;
+        }
+
+          .two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+         .screen {
+            background: #d9def0;
+            text-align: center;
+            padding: 5px;
+            font-size: 12px;
+             border-radius: 4px;
+            margin: 12px 0;
+            letter-spacing: 3px;
+        }
+
+         #seatBox {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 6px;
+        }
+
+         .seat {
+            padding: 8px 0;
+            font-size: 12px;
+            border: 1px solid #888;
+            background: #fff;
+             border-radius: 4px;
+            cursor: pointer;
+        }
+
+         .seat.selected {
+            background: #2e7d4f;
+            color: white;
+            border-color: #2e7d4f;
+        }
+
+          .seat.taken {
+            background: #bbb;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+          .legend {
+            font-size: 12px;
+            margin-top: 10px;
+            color: #555;
+        }
+
+          #summary {
+            margin: 12px 0;
+            font-size: 15px;
+        }
+
+          #message {
+            margin-top: 10px;
+            padding: 9px;
+            border-radius: 5px;
+            display: none;
+            font-size: 1 4px;
+        }
+
+         #message.ok {
+            display: block;
+            background: #e3f4ea;
+            color: #1d6b3d;
+        }
+
+          #message.bad {
+            display: block;
+            background: #fde8e8;
+            color: #a12b2b;
+        }
+
+          .bookBtn {
+            margin-top: 12px;
+            width: 100%;
+            padding: 11px;
+            font-size: 16px;
+            border: 0;
+            background: #2b4a9b;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+          ul {
+            padding-left: 18px;
+            margin: 0;
+        }
+
+         li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+           li button {
+            margin-left: 6px;
+            padding: 3px 8px;
+            cursor: pointer;
+        }
+
+           footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding-bottom: 20px;
+        }
+
+          @media (max-width: 480px) {
+            .two {
+                grid-template-columns: 1fr;
+            }
+        }
+
+      
+    </style>  
+</head> 
+
+<body>  <header> <h1>CineBook</h1>  <p>Online Movie Ticket Reservation System - Final Project Demo</p> 
+    </header>   <main>  <div class="card">  <h2>1. Choose movie and show</h2>  <div class="two">  <div>
+                    <label for="movieSelect">Movie</label><select id="movieSelect"></select></div>  <div><label
+                        for="timeSelect">Show time</label><select id="timeSelect"></select></div> 54 </div> 55 <p
+                id="price"></p>  </div>  <div class="card">  <h2>2. Pick your seats</h2> <div
+                class="screen">SCREEN</div>  <div id="seatBox"></div>  <div class="legend">White = free | Green =
+                your choice | Grey = already booked (max 6 se ats)</div>  </div> index.html | Page 1  <div
+            class="card">  <h2>3. Confirm booking</h2>  <label for="nameInput">Your name</label>  <input
+                id="nameInput" placeholder="Enter your name">  <div id="summary"></div> <button class="bookBtn"
+                onclick="bookTickets()">Book Tickets</button>  <div id="message"></div>  </div>  <div
+            class="card">  <h2>My bookings</h2>  <ul id="myList"></ul>  </div>  </main>  <footer>Made by a
+        first year student for the SDMS project, MITS-DU Gwalior</footer> 
+        <script>   // ---------- data ---------  const movies = [     { name: "Sky Racers", price: 200 },     { name: "The Lost Island", price: 250 },    { name: "Laugh Out Loud", price: 180 },     { name: "Midnight Mystery", price: 220 }   ];  const times = ["10:00 AM", "2:00 PM", "6:00 PM", "9:30 PM"];   const rows = ["A", "B", "C", "D", "E"];   const seatsPerRow = 8;      // ---------- elements ---------   const movieSelect = document.getElementById("movieSelect");   const timeSelect = document.getElementById("timeSelect");   const seatBox = document.getElementById("seatBox");   const nameInput = document.getElementById("nameInput");   const summary = document.getElementById("summary");   const message = document.getElementById("message");   const myList = document.getElementById("myList");   const priceText = document.getElementById("price");  // ---------- saving ---------  function loadBookings() {     try {       return JSON.parse(localStorage.getItem("bookings")) || [];     } catch (e) {       return [];    }  }  function saveBookings() {     try {       localStorage.setItem("bookings", JSON.stringify(bookings));     } catch (e) {}   }   let bookings = loadBookings();   let selected = [];   // ---------- helpers ---------  function currentPrice() {     const m = movies.find(m => m.name === movieSelect.value);     return m.price;   }     function showMessage(text, ok) {     message.textContent = text;     message.className = ok ? "ok" : "bad";   }   function updateSummary() { index.html  |  Page 2134    priceText.textContent = "Ticket price: Rs. " + currentPrice() + " per seat";     if (selected.length === 0) {       summary.textContent = "No seats selected yet.";     } else {       summary.textContent = "Seats: " + selected.join(", ") +         "  |  Total: Rs. " + selected.length * currentPrice();     }   }     // ---------- seats ---------  function takenSeats() {     let taken = [];     for (const b of bookings) {       if (b.movie === movieSelect.value && b.time === timeSelect.value) {         taken = taken.concat(b.seats);       }     }     return taken;   }  function drawSeats() {     seatBox.innerHTML = "";     const taken = takenSeats();     for (const r of rows) {       for (let n = 1; n <= seatsPerRow; n++) {         const id = r + n;         const btn = document.createElement("button");         btn.textContent = id;         btn.className = "seat";         if (taken.includes(id)) {           btn.classList.add("taken");           btn.disabled = true;         }         if (selected.includes(id)) btn.classList.add("selected");         btn.onclick = () => toggleSeat(id);         seatBox.appendChild(btn);       }     }   }  function toggleSeat(id) {     if (selected.includes(id)) {       selected = selected.filter(s => s !== id);     } else if (selected.length < 6) {       selected.push(id);     } else {       showMessage("You can select up to 6 seats only", false);     }     drawSeats();     updateSummary();   }  // ---------- booking ---------  function bookTickets() {     const name = nameInput.value.trim();     if (name === "") {       showMessage("Please enter your name", false);       return;     }     if (selected.length === 0) {       showMessage("Please select at least one seat", false);       return;     }     bookings.push({       name: name,       movie: movieSelect.value,       time: timeSelect.value,       seats: selected,       total: selected.length * currentPrice()     }); index.html  |  Page 3204    saveBookings();     selected = [];    drawSeats();     updateSummary();     showBookings();     showMessage("Booking confirmed! Enjoy the movie.", true);   }   // ---------- my bookings ---------  function showBookings() {     myList.innerHTML = "";     if (bookings.length === 0) {       myList.innerHTML = "<li>No bookings yet</li>";       return;     }     bookings.forEach((b, i) => {       const li = document.createElement("li");       li.textContent = b.name + " | " + b.movie + " | " + b.time +         " | Seats: " + b.seats.join(", ") + " | Rs. " + b.total + " ";       const del = document.createElement("button");       del.textContent = "Cancel";       del.onclick = () => {         bookings.splice(i, 1);         saveBookings();         drawSeats();         showBookings();       };       li.appendChild(del);       myList.appendChild(li);     });   }     // ---------- start ---------  for (const m of movies) {     movieSelect.innerHTML += "<option>" + m.name + "</option>";   }  for (const t of times) {     timeSelect.innerHTML += "<option>" + t + "</option>";   }   function changeShow() {     selected = [];     message.className = "";     drawSeats();     updateSummary(); }    movieSelect.onchange = changeShow;   timeSelect.onchange = changeShow;    drawSeats();   updateSummary();   showBookings();   </script>
+    
+</body> 
+
+</html>
